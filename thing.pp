@@ -6,6 +6,14 @@ class openhatch_code {
     uid => '50000', # Let's give it a constant UID
   }
 
+  file { '/home/deploy':
+    require => [User['deploy'], Group['deploy']],
+    ensure => directory,
+    group  => 'deploy',
+    owner  => 'deploy',
+    mode   => '0750',
+  }
+
   group { 'deploy':
     gid => '50000',
     require => User['deploy'],
@@ -23,11 +31,12 @@ class openhatch_code {
     group => 'deploy',
     cwd => '/home/deploy/',
     logoutput => "on_failure",
-    unless => '/usr/bin/test -d /home/deploy/oh-mainline'
+    unless => '/usr/bin/test -d /home/deploy/oh-mainline',
+    subscribe => [File['/home/deploy']],
   }
 
 }
 
 node default {
-  openhatch_code
+  include openhatch_code
 }
