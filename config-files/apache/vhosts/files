@@ -1,0 +1,17 @@
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        ServerName files.openhatch.org
+        ServerAlias www.files.openhatch.org
+        
+        DocumentRoot /var/web/files.openhatch.org/
+
+        ErrorLog /var/log/apache2/files.openhatch.org-error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog /var/log/apache2/files.openhatch.org-access.log combined_plus_musec_and_vhost_and_responsebytes
+
+</VirtualHost>
+

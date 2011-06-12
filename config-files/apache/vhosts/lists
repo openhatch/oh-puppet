@@ -1,0 +1,24 @@
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        
+        DocumentRoot /var/www/
+        ServerName lists.openhatch.org
+
+        ScriptAlias /mailman /usr/lib/cgi-bin/mailman
+        Alias /pipermail/ /var/lib/mailman/archives/public/
+        Alias /images/mailman/ /usr/share/images/mailman/
+
+        Redirect /index.html http://lists.openhatch.org/mailman/listinfo
+        RedirectMatch permanent /mailman/(.*)/alpha-discuss(.*) http://lists.openhatch.org/mailman/$1/discuss$2
+        RedirectMatch permanent /mailman/(.*)/alpha-announce(.*) http://lists.openhatch.org/mailman/$1/announce$2
+
+        ErrorLog /var/log/apache2/lists-error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog /var/log/apache2/lists-access.log combined_plus_musec_and_vhost_and_responsebytes
+
+</VirtualHost>
+

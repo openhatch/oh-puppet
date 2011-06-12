@@ -1,0 +1,23 @@
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        ServerName openhatch.org
+        
+        DocumentRoot /var/www/
+
+        WSGIDaemonProcess http user=deploy group=deploy processes=7 threads=20 maximum-requests=2000 inactivity-timeout=180
+        # WSGI
+        WSGIScriptAlias / /home/deploy/milestone-a.buildout/bin/production.wsgi
+        WSGIProcessGroup http
+
+        ErrorLog /var/log/apache2/http.openhatch.org-error.log
+
+        Include /etc/apache2/most-of-openhatch-org
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog /var/log/apache2/http.openhatch.org-access.log combined_plus_musec_and_vhost_and_responsebytes
+
+</VirtualHost>
+

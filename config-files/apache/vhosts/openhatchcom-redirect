@@ -1,0 +1,17 @@
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        ServerName openhatch.com
+        ServerAlias www.openhatch.com
+
+        Redirect / http://openhatch.org/
+
+        ErrorLog /var/log/apache2/openhatch.com-error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog /var/log/apache2/openhatch.com-access.log combined_plus_musec_and_vhost_and_responsebytes
+
+</VirtualHost>
+

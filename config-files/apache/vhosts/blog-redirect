@@ -1,0 +1,17 @@
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        ServerName blog.openhatch.org
+        RedirectPermanent / https://openhatch.org/blog/
+        
+        DocumentRoot /var/www/
+
+        ErrorLog /var/log/apache2/blog-redirect.openhatch.org-error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog /var/log/apache2/blog-redirect.openhatch.org-access.log combined_plus_musec_and_vhost_and_responsebytes
+
+</VirtualHost>
+

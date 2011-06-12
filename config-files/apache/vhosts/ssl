@@ -1,0 +1,46 @@
+NameVirtualHost *:443
+
+<VirtualHost *:443>
+        SSLEngine On
+        SSLCertificateFile /etc/ssl/certs/openhatch.org.2011-05-22.crt
+        SSLCACertificateFile /etc/ssl/certs/rapidssl-from-web.crt
+        SSLCertificateKeyFile /etc/ssl/private/openhatch.org.2011-05-22.key
+
+        ServerAdmin webmaster@localhost
+        ServerName openhatch.org
+        
+        DocumentRoot /var/www/
+
+        WSGIDaemonProcess live user=deploy group=deploy processes=3 threads=20 maximum-requests=2000 inactivity-timeout=180
+        # WSGI
+        WSGIScriptAlias / /home/deploy/milestone-a.buildout/bin/production.wsgi
+        WSGIProcessGroup live
+
+        Include /etc/apache2/most-of-openhatch-org
+
+        Redirect /google-maps-ssl http://maps.google.com/maps/api/js?sensor=false
+
+        ErrorLog /var/log/apache2/ssl.openhatch.org-error.log
+        CustomLog /var/log/apache2/ssl.openhatch.org-access.log combined_plus_musec_and_vhost_and_responsebytes
+
+</VirtualHost>
+
+<VirtualHost *:443>
+        ServerName blog.openhatch.org
+        ServerAlias *.openhatch.org
+        SSLEngine On
+        SSLCertificateFile /etc/ssl/certs/openhatch.org.crt
+        SSLCACertificateFile /etc/ssl/certs/Gandi.pem
+        SSLCertificateKeyFile /etc/ssl/private/openhatch.org.key
+
+        RedirectPermanent / https://openhatch.org/
+
+        ErrorLog /var/log/apache2/wrong-vhost-ssl.openhatch.org-error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog /var/log/apache2/wrong-vhost-ssl.openhatch.org-access.log combined_plus_musec_and_vhost_and_responsebytes
+</VirtualHost>
+
