@@ -1,0 +1,135 @@
+        Alias /blog /var/www/blog
+        Alias /git-missions /home/deploy/milestone-a/mysite/missions-userdata/git/
+        Alias /meeting-irc-logs /home/ircbot/meetings/logs
+        Alias /pubs /var/www/pubs
+        Alias /w /home/wiki/web/wiki
+        Alias /wiki /home/wiki/web/wiki/index.php
+        Alias /forum /home/phorum/web
+        Alias /piwik /var/web/piwik
+
+        <Directory /var/www/blog/>
+                Options Indexes FollowSymLinks MultiViews
+                AllowOverride All
+                Order allow,deny
+                allow from all
+
+        RewriteEngine On
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule . /blog/index.php [L]
+        </Directory>
+
+        Alias /static/ /home/deploy/milestone-a/mysite/static/
+        Alias /media/ /home/deploy/milestone-a/parts/production/django/contrib/admin/media/
+
+        ### NOTE there is a symlink, /var/www/static/, that that the following depends on
+        ### if you remove that symlink, you will get 404s to cached pages
+        ### so do not!
+        RewriteEngine on
+        RewriteCond /home/deploy/milestone-a/mysite/static/_cache/%{REQUEST_FILENAME}/%{QUERY_STRING}/index.html -f
+        RewriteCond %{HTTP_COOKIE} !sessionid
+        RewriteRule ^(.*)$ /static/_cache/$1/%{QUERY_STRING}/index.html [L]
+
+        <Location /static/static/photos/profile-photos/>
+                ExpiresActive on
+                ExpiresDefault "access plus 10 years"
+
+                # No etags as we're using far-future expires
+                FileETag none
+                ForceType image/png
+        </Location>
+        <Location />
+                # Insert filter
+                SetOutputFilter DEFLATE
+
+                # Netscape 4.x has some problems...
+                BrowserMatch ^Mozilla/4 gzip-only-text/html
+
+                # Netscape 4.06-4.08 have some more problems
+                BrowserMatch ^Mozilla/4\.0[678] no-gzip
+
+                # MSIE masquerades as Netscape, but it is fine
+                BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+                # Don't compress images
+                SetEnvIfNoCase Request_URI \
+                        \.(?:gif|jpe?g|png)$ no-gzip dont-vary
+
+                # Make sure proxies don't deliver the wrong content
+                Header append Vary User-Agent env=!dont-vary
+        </Location>
+        <Location /static/js/>
+                ExpiresActive on
+                ExpiresDefault "access plus 10 years"
+
+                # No etags as we're using far-future expires
+                FileETag none
+        </Location>
+
+        <Location /static/packed/>
+                ExpiresActive on
+                ExpiresDefault "access plus 10 years"
+
+                # No etags as we're using far-future expires
+                FileETag none
+        </Location>
+
+        <Location /static/images/icons/projects/>
+                ExpiresActive on
+                ExpiresDefault "access plus 10 years"
+
+                # No etags as we're using far-future expires
+                FileETag none
+        </Location>
+
+
+        # These used to be WordPress 'static' pages, hosted on the blog.
+        # Now they are wiki pages.
+        #
+        # The /? thing is so whether or not you put a slash at the end,
+        # you get redirected to the same place.
+        RedirectMatch permanent ^/policies-etc/?$ https://openhatch.org/wiki/Privacy_policy
+        RedirectMatch permanent ^/contact/?$ https://openhatch.org/wiki/Contact
+        RedirectMatch permanent ^/source-code-etc/?$ https://openhatch.org/wiki/Category:Hacking_OpenHatch 
+        RedirectMatch permanent ^/colophon/?$ https://openhatch.org/wiki/About_OpenHatch
+        RedirectMatch permanent ^/about/?$ https://openhatch.org/wiki/About_OpenHatch
+        RedirectMatch permanent ^/blog/source-code-etc/?$ https://openhatch.org/wiki/Category:Hacking_OpenHatch
+        RedirectMatch permanent ^/blog/about/?$ https://openhatch.org/wiki/About_OpenHatch
+
+        Alias /contact/ /var/www/blog/index.php
+        RedirectMatch ^/contact$ https://openhatch.org/contact/
+
+        Alias /colophon/ /var/www/blog/index.php
+        RedirectMatch ^/colophon$ https://openhatch.org/colophon/
+
+
+        Alias /policies-etc/ /var/www/blog/index.php
+        RedirectMatch ^/policies-etc$ https://openhatch.org/policies-etc/
+
+        Alias /robots.txt /home/deploy/milestone-a/mysite/static/robots.txt
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        # Oops, some bots look at /blog/blog/feed/ and get a 404
+        RedirectPermanent /blog/blog/ https://openhatch.org/blog/
+
+    <Location /issues>
+        Order allow,deny
+        Allow from all
+        ProxyPass http://localhost:8088/issues
+        ProxyPassReverse http://localhost:8088/issues
+    </Location>
+
+    <Location /bugs>
+        Order allow,deny
+        Allow from all
+        ProxyPass http://localhost:8088/bugs
+        ProxyPassReverse http://localhost:8088/bugs
+    </Location>
+
+        # Oops, some bots look at /blog/blog/feed/ and get a 404
+        RedirectPermanent /blog/blog/ https://openhatch.org/blog/
+
+        Redirect /blog/2010/tell-a-project-you-want-to-help https://openhatch.org/blog/2010/tell-a-project-you-want-to-hel
+
