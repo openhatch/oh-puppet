@@ -49,7 +49,3 @@ class openhatch_code {
   }
 
 }
-
-node default {
-  include openhatch_code
-}
