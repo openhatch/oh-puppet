@@ -1,16 +1,10 @@
 class openhatch_code {
-  package { 'python2.6-dev': ensure => installed }
-  package { 'python-libxml2': ensure => installed }
-  package { 'memcached': ensure => installed }
-  package { 'python-mysqldb': ensure => installed }
-  package { 'python-setuptools': ensure => installed }
-  package { 'libxml2-dev': ensure => installed }
-  package { 'libxslt-dev': ensure => installed }
-  package { 'mysql-server': ensure => installed }
-  package { 'mysql-client': ensure => installed }
-  package { 'python-xapian': ensure => installed }
-  package { 'python-imaging': ensure => installed }
-  package { 'subversion': ensure => installed }
+  package { ['python2.6-dev', 'python-libxml2', 'memcached', 'python-mysqldb',
+             'python-setuptools', 'libxml2-dev', 'libxslt-dev', 'mysql-server',
+             'mysql-client', 'python-xapian', 'python-imaging', 'subversion',
+             'git-core']:
+    ensure => installed,
+  }
 
   user { 'deploy':
     comment => "Mister Deploy",
@@ -30,10 +24,6 @@ class openhatch_code {
   group { 'deploy':
     gid => '50000',
     require => User['deploy'],
-  }
-
-  package { 'git':
-    ensure => 'installed',
   }
 
   # We do not use the vcsrepo type because
