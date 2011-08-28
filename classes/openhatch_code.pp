@@ -1,8 +1,7 @@
 class openhatch_code {
   package { ['python2.6-dev', 'python-libxml2', 'memcached', 'python-mysqldb',
-             'python-setuptools', 'libxml2-dev', 'libxslt-dev', 'mysql-server',
-             'mysql-client', 'python-xapian', 'python-imaging', 'subversion',
-             'git-core']:
+             'python-setuptools', 'libxml2-dev', 'libxslt-dev', 'mysql-client',
+             'python-xapian', 'python-imaging', 'subversion', 'git-core']:
     ensure => installed,
   }
 
