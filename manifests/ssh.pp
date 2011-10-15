@@ -10,9 +10,11 @@ class ssh {
 }
 
 class ssh::client {
-	if $operatingsystem == "Ubuntu" {
-		package { "openssh-client":
-			ensure => latest
+	case $operatingsystem {
+		Ubuntu,Debian: {
+			package { "openssh-client":
+				ensure => latest
+			}
 		}
 	}
 }
@@ -38,8 +40,10 @@ define sshhostkey($ip, $key) {
 
 
 class ssh::hostkeys::publish {
-	if $operatingsystem == "Ubuntu" {
-		include ssh::client
+	case $operatingsystem {
+		Ubuntu,Debian: {
+			include ssh::client
+		}
 	}
 
 	# Store this hosts's host key
@@ -56,6 +60,7 @@ class ssh::hostkeys::publish {
 
 class ssh::hostkeys::collect {
 	# Do this about twice a day
+	# OH-TODO: Work out what this achieves and modify as needed.
 	if $hostname == "fenari" or generate("/usr/local/bin/position-of-the-moon") == "True" {
 		notice("Collecting SSH host keys on $hostname.")
 
@@ -65,23 +70,27 @@ class ssh::hostkeys::collect {
 }
 
 class ssh::config {
-        if $operatingsystem == "Ubuntu" {
-		file {
-                	"/etc/ssh/sshd_config":
-	                        owner => root,
-	                        group => root,
-	                        mode  => 0644,
-	                        content => template("ssh/sshd_config.erb");
+        case $operatingsystem {
+		Ubuntu,Debian: {
+			file {
+        	       	        "/etc/ssh/sshd_config":
+                                        owner => root,
+                                        group => root,
+                                        mode  => 0644,
+                                        content => template("ssh/sshd_config.erb");
+			}
 		}
 	}
 }
 
 class ssh::daemon {
-	if $operatingsystem == "Ubuntu" {
-		service {
-			ssh:
-				ensure => running,
-				subscribe => File["/etc/ssh/sshd_config"];
+	case $operatingsystem {
+		Ubuntu,Debian: {
+			service {
+				ssh:
+					ensure => running,
+					subscribe => File["/etc/ssh/sshd_config"];
+			}
 		}
 	}
 }
