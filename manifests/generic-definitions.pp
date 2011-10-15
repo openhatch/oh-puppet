@@ -6,7 +6,7 @@
 define system_role($description) {
 	$role_script_content = "#!/bin/sh
 
-echo \"$(hostname) is a Wikimedia ${description} (${title}).\"
+echo \"$(hostname) is an OpenHatch ${description} (${title}).\"
 "
 
 	$rolename = regsubst($title, ":", "-", "G")
