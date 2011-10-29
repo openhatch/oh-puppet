@@ -4,8 +4,8 @@ import "decommissioning.pp"
 import "generic-definitions.pp"
 import "ssh.pp"
 import "sudo.pp"
-import "nagios.pp"
-import "nrpe.pp"
+#import "nagios.pp"
+#import "nrpe.pp"
 import "../private/manifests/passwords.pp"
 
 
@@ -19,36 +19,29 @@ class base::apt::update {
 
 class base::apt {
 
-	# security.ubuntu.com should be accessed through a proxy
-	file { "/etc/apt/apt.conf.d/80wikimedia-proxy":
-		mode => 0644,
-		owner => root,
-		group => root,
-		path => "/etc/apt/apt.conf.d/80wikimedia-proxy",
-		content => "Acquire::http::Proxy::security.ubuntu.com \"http://brewster.wikimedia.org:8080\";",
-		ensure => present;
-	}
+	# None of the following is used by OpenHatch as we don't have a separate
+	# repository containing packages, so it is disabled.
 
 	# Setup the APT repositories
-	$aptrepository = "## Wikimedia APT repository
-deb http://apt.wikimedia.org/wikimedia ${lsbdistcodename}-wikimedia main universe
-deb-src http://apt.wikimedia.org/wikimedia ${lsbdistcodename}-wikimedia main universe
+	$aptrepository = "## OpenHatch APT repository
+deb http://apt.openhatch.org/openhatch ${lsbdistcodename}-openhatch main universe
+deb-src http://apt.openhatch.org/openhatch ${lsbdistcodename}-openhatch main universe
 "
 
-	file {
-		"/etc/apt/sources.list.d/wikimedia.list":
-			require => Exec[sed-wikimedia-repository],
-			content => $aptrepository;
-	}
+	#file {
+	#	"/etc/apt/sources.list.d/openhatch.list":
+	#		require => Exec[sed-openhatch-repository],
+	#		content => $aptrepository;
+	#}
 
 
 	# Comment out the old entries in /etc/apt/sources.list
-	exec { 
-		sed-wikimedia-repository:
-			path => "/bin:/sbin:/usr/bin:/usr/sbin",
-			command => "sed -i '/deb.*apt\\.wikimedia\\.org.*-wikimedia main/s/^deb/#deb/g' /etc/apt/sources.list",
-			creates => "/etc/apt/sources.list.d/wikimedia.list";
-	}
+	#exec { 
+	#	sed-openhatch-repository:
+	#		path => "/bin:/sbin:/usr/bin:/usr/sbin",
+	#		command => "sed -i '/deb.*apt\\.openhatch\\.org.*-openhatch main/s/^deb/#deb/g' /etc/apt/sources.list",
+	#		creates => "/etc/apt/sources.list.d/openhatch.list";
+	#}
 
 
 	package { apt-show-versions:
@@ -77,18 +70,8 @@ class base::puppet {
 		ensure => latest;
 	}
 
-	# monitoring via snmp traps
-	package { [ "snmp" ]:
-		ensure => latest;
-	}
-
-	monitor_service { "$hostname puppet freshness": description => "Puppet freshness", check_command => "puppet-FAIL", passive => "true", freshness => 36000, retries => 1 ; }
+	#monitor_service { "$hostname puppet freshness": description => "Puppet freshness", check_command => "puppet-FAIL", passive => "true", freshness => 36000, retries => 1 ; }
 	
-	exec { "snmptrap -v 1 -c public nagios.wikimedia.org .1.3.6.1.4.1.33298 `hostname` 6 1004 `uptime | awk '{ split(\$3,a,\":\"); print (a[1]*60+a[2])*60 }'`":
-		path => "/bin:/usr/bin",
-		require => Package["snmp"]
-	}
-
 	file {
 		"/etc/default/puppet":
 			owner => root,
@@ -306,7 +289,7 @@ class base {
 		base::motd,
 		base::vimconfig,
 		base::standard-packages,
-		base::monitoring::host,
+		#base::monitoring::host,
 		ssh
 
 	if $realm == "labs" {
