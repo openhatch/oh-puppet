@@ -21,17 +21,17 @@ class ssh::client {
 
 define sshhostkey($ip, $key) {
 	$host = regsubst($title, '^([^\.]+)\..*$', '\1')
-	
+
 	sshkey {
 		"$title":
-                	type => ssh-rsa,
-                        key => $key,
-                        ensure => present;
+			type => ssh-rsa,
+			key => $key,
+			ensure => present;
 		"$host":
-                	type => ssh-rsa,
-                        key => $key,
-                        ensure => present;
-                "$ip":
+			type => ssh-rsa,
+			key => $key,
+			ensure => present;
+		"$ip":
 			type => ssh-rsa,
 			key => $key,
 			ensure => present;
@@ -64,7 +64,7 @@ class ssh::hostkeys::collect {
 	if $hostname == "fenari" or generate("/usr/local/bin/position-of-the-moon") == "True" {
 		notice("Collecting SSH host keys on $hostname.")
 
-        	# Install all collected ssh host keys
+		# Install all collected ssh host keys
 		Sshhostkey <<| |>>
 	}
 }
@@ -86,6 +86,10 @@ class ssh::config {
 class ssh::daemon {
 	case $operatingsystem {
 		Ubuntu,Debian: {
+			package { "openssh-server":
+				ensure => latest;
+			}
+
 			service {
 				ssh:
 					ensure => running,
