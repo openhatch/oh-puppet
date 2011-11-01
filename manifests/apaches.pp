@@ -115,11 +115,6 @@ extension=php_wikidiff2.so
 			owner => root,
 			group => root,
 			content => $file_wikidiff2_ini;
-		"/etc/cluster":
-			mode => 0444,
-			owner => root, 
-			group => root, 
-			content => $site;
 	}
 
 	# local run of sync-apache for initial deploy
