@@ -119,7 +119,7 @@ class generic::webserver::static {
 	}
 
 	# Monitoring
-	monitor_service { "http": description => "HTTP", check_command => "check_http" }
+	#monitor_service { "http": description => "HTTP", check_command => "check_http" }
 }
 
 class generic::webserver::php5 {
@@ -137,7 +137,7 @@ class generic::webserver::php5 {
         }
 
 	# Monitoring
-	monitor_service { "http": description => "HTTP", check_command => "check_http" }
+	#monitor_service { "http": description => "HTTP", check_command => "check_http" }
 }
 
 class generic::webserver::modproxy {
