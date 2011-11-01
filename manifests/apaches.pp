@@ -1,9 +1,9 @@
 # apaches.pp
 
 # Virtual monitor group resources for the monitoring server
-@monitor_group { "appserver": description => "pmtpa application servers" }
-@monitor_group { "api_appserver": description => "pmtpa API application servers" }
-@monitor_group { "bits_appserver": description => "pmtpa Bits application servers" }
+#@monitor_group { "appserver": description => "pmtpa application servers" }
+#@monitor_group { "api_appserver": description => "pmtpa API application servers" }
+#@monitor_group { "bits_appserver": description => "pmtpa Bits application servers" }
 
 class apaches::packages {
 	# wikimedia-task-appserver moved to mediawiki.pp
@@ -185,7 +185,7 @@ class apaches::pybal-check {
 }
 
 class apaches::monitoring {
-	monitor_service { "appserver http": description => "Apache HTTP", check_command => "check_http_wikipedia" }
+	#monitor_service { "appserver http": description => "Apache HTTP", check_command => "check_http_wikipedia" }
 }
 
 class apaches::fonts {
