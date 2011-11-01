@@ -1,7 +1,7 @@
 # memcached.pp
 
 # Virtual resource for monitoring server
-@monitor_group { "mc_pmtpa": description => "pmtpa memcached" }
+#@monitor_group { "mc_pmtpa": description => "pmtpa memcached" }
 
 class memcached {
 
@@ -19,7 +19,7 @@ class memcached {
 
 	class monitoring {
 		# Nagios
-		monitor_service { "memcached": description => "Memcached", check_command => "check_tcp!11000" }
+		#monitor_service { "memcached": description => "Memcached", check_command => "check_tcp!11000" }
 
 		# Ganglia
 		package { python-memcache:
@@ -47,7 +47,7 @@ class memcached {
 		}
 	}
 
-	include memcached::monitoring
+	#include memcached::monitoring
 }
 
 class memcached::config {
