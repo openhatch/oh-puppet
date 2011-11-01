@@ -40,11 +40,11 @@ class ntp {
 		include ntp
 
 		# Monitoring
-		monitor_service { "ntp": 
-			description => "NTP", 
-			check_command => "check_ntp_time!0.5!1",
-			retries => 15, # wait for resync, don't flap after restart -- TS
-		}
+		#monitor_service { "ntp": 
+		#	description => "NTP", 
+		#	check_command => "check_ntp_time!0.5!1",
+		#	retries => 15, # wait for resync, don't flap after restart -- TS
+		#}
 	}
 
 	class server {
@@ -62,10 +62,10 @@ class ntp {
 		include ntp
 
 		# Monitoring
-		monitor_service { "ntp peers":
-			description => "NTP peers",
-			check_command => "check_ntp_peer!0.1!0.5";
-		}
+		#monitor_service { "ntp peers":
+		#	description => "NTP peers",
+		#	check_command => "check_ntp_peer!0.1!0.5";
+		#}
 	}
 
 	class none {
